@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Easy Vote(Auto Vote for Minecraft Servers)",
+  "description": "Расширение для автоматического голосования за Minecraft-сервер на сайте minecraft-servers.ru.",
+  "version": "1.0",
+  "author": "La3ert",
+  "action": {
+    "default_popup": "html/popup.html"
+  },
+
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "alarms"
+  ],
+
+  "background": {
+    "service_worker": "js/background.js"
+  },
+
+  "options_page": "html/options.html"
+}
