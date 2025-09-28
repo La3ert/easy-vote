@@ -10,7 +10,7 @@ function init () {
         if (data.voteLink) checkAndVote();
     });
 
-    chrome.alarms.create('voteCheck', {periodInMinutes: 0.1 });
+    chrome.alarms.create('voteCheck', {periodInMinutes: 30 });
 
     chrome.alarms.onAlarm.addListener((alarm) => {
         if (alarm.name === 'voteCheck') {
