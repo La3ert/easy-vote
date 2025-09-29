@@ -58,12 +58,15 @@ document.getElementById("clearData").addEventListener("click", (e) => {
 });
 
 function showCurrentData() {
-    chrome.storage.sync.get(['nickname', 'voteLink', 'email', ], (data) => {
+    chrome.storage.sync.get(['nickname', 'voteLink', 'email', 'lastVoteDate'], (data) => {
         const display = document.getElementById('currentData');
         display.textContent = `
             Nickname: ${data.nickname || 'not set'}
             Vote link: ${data.voteLink || 'not set'}
-            Email: ${data.email || 'not set'}`;
+            Email: ${data.email || 'not set'}
+            Last Vote Date: ${data.lastVoteDate || 'never voted'}
+            `;
+
         document.getElementById('clearData').disabled = false;
         if (!data.nickname && !data.voteLink && !data.email) {
             display.textContent = 'No data set.';

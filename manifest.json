@@ -7,6 +7,14 @@
   "action": {
     "default_popup": "html/popup.html"
   },
+  "content_scripts": [
+    {
+      "matches": ["https://minecraft-servers.ru/server/*",
+        "https://accounts.google.com/*"],
+
+      "js": ["js/content.js"]
+    }
+  ],
 
   "permissions": [
     "storage",
