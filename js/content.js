@@ -3,10 +3,10 @@ chrome.runtime.sendMessage({ getTabId: true }, (response) => {
 });
 
 window.addEventListener('load', () => {
-    chrome.storage.local.get(['isVoteInProcess', 'isWaitForVoteSuccess'], (result) => {
+    chrome.storage.local.get(['isVoteInProcess', 'isWaitForVoteSuccess', 'isWaitForCloseTab'], (result) => {
         if (!result.isVoteInProcess) return;
 
-        if (location.hostname.includes("minecraft-servers.ru")) {
+        if (location.hostname.includes("minecraft-servers.ru") && !result.isWaitForCloseTab) {
             setTimeout(waitForVoteButton, 2000);
         }
 
@@ -14,8 +14,12 @@ window.addEventListener('load', () => {
             setTimeout(waitForGoogleEmail, 2000);
         }
 
-        if (result.isWaitForVoteSuccess && (location.href.includes("signin/oauth/id" ) || location.href.includes("https://minecraft-servers.ru"))) {
+        if (result.isWaitForVoteSuccess && location.href.includes("signin/oauth/id" )) {
             setTimeout(waitForVoteSuccess, 2000);
+        }
+
+        if (result.isWaitForCloseTab) {
+            setTimeout(closeTab, 2000);
         }
     });
 });
@@ -97,17 +101,17 @@ function waitForVoteSuccess() {
         });
         if (button) {
             button.click();
-            chrome.storage.local.set({ isVoteInProcess: false, isWaitForVoteSuccess: false }, () => {
-                chrome.runtime.sendMessage({ voteSuccess: true }, () => {
-                    chrome.runtime.sendMessage({ closeTab: true, tabId: window.tabId });
-                });
-            });
+            chrome.storage.local.set({ isWaitForCloseTab: true });
         }
     } else {
-        chrome.storage.local.set({ isVoteInProcess: false, isWaitForVoteSuccess: false }, () => {
-            chrome.runtime.sendMessage({ voteSuccess: true }, () => {
-                chrome.runtime.sendMessage({ closeTab: true, tabId: window.tabId });
-            });
-        });
+        chrome.storage.local.set({ isWaitForCloseTab: true });
     }
+}
+
+function closeTab() {
+    chrome.storage.local.set({ isVoteInProcess: false, isWaitForVoteSuccess: false, isWaitForCloseTab: false }, () => {
+        chrome.runtime.sendMessage({ voteSuccess: true }, () => {
+            chrome.runtime.sendMessage({ closeTab: true, tabId: window.tabId });
+        });
+    });
 }

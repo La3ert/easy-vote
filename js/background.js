@@ -42,7 +42,11 @@ function checkAndVote() {
 
         if (data.voteLink) {
             chrome.storage.local.set({ isVoteInProcess: true });
-            chrome.tabs.create({url: data.voteLink});
+            chrome.tabs.create({
+                url: data.voteLink
+            });
+
+
         }
     })
 }
