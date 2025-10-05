@@ -120,7 +120,6 @@ function waitForVoteSuccess() {
 }
 
 function closeTab() {
-    console.log('[DEBUG] Closing tab now...');
     chrome.storage.local.set({
         isVoteInProcess: false,
         isWaitForVoteSuccess: false,
@@ -129,7 +128,6 @@ function closeTab() {
     }, () => {
         chrome.runtime.sendMessage({ voteSuccess: true }, () => {
             chrome.runtime.sendMessage({ closeMe: true });
-            console.log('[DEBUG] Tab closed and voteSuccess sent');
         });
     });
 }

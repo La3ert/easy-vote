@@ -3,7 +3,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const tabId = message.tabId || (sender.tab && sender.tab.id);
         if (tabId) {
             chrome.tabs.remove(tabId, () => {
-                console.log("Closed tab:", tabId);
                 chrome.storage.local.set({ isVoteInProcess: false });
             });
         }
@@ -12,7 +11,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.voteSuccess) {
         const today = new Date().toISOString().split('T')[0];
         chrome.storage.sync.set({ lastVoteDate: today }, () => {
-            console.log("Vote success recorded:", today);
             sendResponse({ success: true });
         });
         return true;
@@ -39,7 +37,6 @@ function checkAndVote() {
         const today = new Date().toISOString().split('T')[0];
 
         if (data.lastVoteDate === today) {
-            console.log('Already voted today.');
             return;
         }
 
