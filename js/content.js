@@ -1,62 +1,74 @@
 chrome.runtime.sendMessage({ getTabId: true }, (response) => {
-    window.tabId = response.tabId;
+    window.tabId = response?.tabId || null;
 });
 
 window.addEventListener('load', () => {
-    chrome.storage.local.get(['isVoteInProcess', 'isWaitForVoteSuccess', 'isWaitForCloseTab'], (result) => {
+
+    chrome.storage.local.get([
+        'isVoteInProcess',
+        'isWaitForVoteSuccess',
+        'isWaitForCloseTab',
+        'isSignComplete'
+    ], (result) => {
+
         if (!result.isVoteInProcess) return;
 
-        if (location.hostname.includes("minecraft-servers.ru") && !result.isWaitForCloseTab) {
-            setTimeout(waitForVoteButton, 2000);
+        if (result.isWaitForCloseTab) {
+            setTimeout(closeTab, 1000);
+            return;
+        }
+
+        if (result.isWaitForVoteSuccess && result.isSignComplete) {
+            setTimeout(waitForVoteSuccess, 1000);
+            return;
+        }
+
+        if (location.hostname.includes("minecraft-servers.ru") && !result.isSignComplete) {
+            setTimeout(waitForVoteButton, 1000);
+            return;
         }
 
         if (location.href.includes("oauthchooseaccount")) {
-            setTimeout(waitForGoogleEmail, 2000);
-        }
-
-        if (result.isWaitForVoteSuccess && location.href.includes("signin/oauth/id" )) {
-            setTimeout(waitForVoteSuccess, 2000);
-        }
-
-        if (result.isWaitForCloseTab) {
-            setTimeout(closeTab, 2000);
+            setTimeout(waitForGoogleEmail, 1000);
         }
     });
 });
 
+chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local') return;
 
+    if (changes.isWaitForVoteSuccess?.newValue && changes.isSignComplete?.newValue) {
+        setTimeout(waitForVoteSuccess, 1000);
+    }
 
+    if (changes.isWaitForCloseTab?.newValue) {
+        setTimeout(closeTab, 1000);
+    }
+});
 
 function waitForVoteButton() {
     const button = document.querySelector('button.app_btn.px-10.h-12');
-    chrome.storage.local.get(['isVoteInProcess'], (result) => {
-        if (result.isVoteInProcess) {
-            if (button) {
-                button.click();
-                waitForNickInput();
-            } else {
-                setTimeout(waitForVoteButton, 1000);
-            }
-        }
-    });
+    if (button) {
+        button.click();
+        setTimeout(waitForNickInput, 1000);
+    } else {
+        setTimeout(waitForVoteButton, 1000);
+    }
 }
 
 function waitForNickInput() {
-
     const input = document.getElementById('username');
-
-    const inputEvent = new Event('input', { bubbles: true });
-    const changeEvent = new Event('change', { bubbles: true });
-
     if (input) {
-        input.focus();
-        input.select();
-
         chrome.storage.sync.get(['nickname'], (data) => {
-            input.value = data.nickname;
+            const inputEvent = new Event('input', { bubbles: true });
+            const changeEvent = new Event('change', { bubbles: true });
+
+            input.focus();
+            input.value = data.nickname || '';
             input.dispatchEvent(inputEvent);
             input.dispatchEvent(changeEvent);
-            waitForGoogleButton();
+
+            setTimeout(waitForGoogleButton, 1000);
         });
     } else {
         setTimeout(waitForNickInput, 1000);
@@ -64,10 +76,10 @@ function waitForNickInput() {
 }
 
 function waitForGoogleButton() {
-    const googleButton = document.querySelector('button img[alt="google"]')
+    const googleButton = document.querySelector('button img[alt="google"]');
     if (googleButton) {
         googleButton.click();
-        waitForGoogleEmail();
+        setTimeout(waitForGoogleEmail, 2000);
     } else {
         setTimeout(waitForGoogleButton, 1000);
     }
@@ -75,14 +87,13 @@ function waitForGoogleButton() {
 
 function waitForGoogleEmail() {
     chrome.storage.sync.get(['email'], (data) => {
-        if (!data.email) {
-            return;
-        }
+        if (!data.email) return;
+
         const userEmail = data.email;
         const emailDiv = document.querySelector(`div[data-email="${userEmail}"]`);
         if (emailDiv) {
+            chrome.storage.local.set({ isWaitForVoteSuccess: true, isSignComplete: true });
             emailDiv.click();
-            chrome.storage.local.set({ isWaitForVoteSuccess: true });
         } else {
             setTimeout(waitForGoogleEmail, 1000);
         }
@@ -109,9 +120,16 @@ function waitForVoteSuccess() {
 }
 
 function closeTab() {
-    chrome.storage.local.set({ isVoteInProcess: false, isWaitForVoteSuccess: false, isWaitForCloseTab: false }, () => {
+    console.log('[DEBUG] Closing tab now...');
+    chrome.storage.local.set({
+        isVoteInProcess: false,
+        isWaitForVoteSuccess: false,
+        isWaitForCloseTab: false,
+        isSignComplete: false
+    }, () => {
         chrome.runtime.sendMessage({ voteSuccess: true }, () => {
-            chrome.runtime.sendMessage({ closeTab: true, tabId: window.tabId });
+            chrome.runtime.sendMessage({ closeMe: true });
+            console.log('[DEBUG] Tab closed and voteSuccess sent');
         });
     });
 }

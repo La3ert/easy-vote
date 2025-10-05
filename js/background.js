@@ -1,21 +1,25 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.getTabId && sender.tab && sender.tab.id) {
-        sendResponse({ tabId: sender.tab.id });
-        return; // Не забывайте завершать обработку
+    if (message.closeMe) {
+        const tabId = message.tabId || (sender.tab && sender.tab.id);
+        if (tabId) {
+            chrome.tabs.remove(tabId, () => {
+                console.log("Closed tab:", tabId);
+                chrome.storage.local.set({ isVoteInProcess: false });
+            });
+        }
     }
+
     if (message.voteSuccess) {
         const today = new Date().toISOString().split('T')[0];
         chrome.storage.sync.set({ lastVoteDate: today }, () => {
+            console.log("Vote success recorded:", today);
             sendResponse({ success: true });
         });
         return true;
     }
-    if (message.closeTab && message.tabId) {
-        chrome.tabs.remove(message.tabId, () => {
-            chrome.storage.local.set({ isVoteInProcess: false });
-        });
-    }
 });
+
+
 function init () {
     chrome.storage.sync.get(['nickname', 'voteLink', 'email'], (data) => {
         if (data.voteLink) checkAndVote();
@@ -32,7 +36,6 @@ function init () {
 
 function checkAndVote() {
     chrome.storage.sync.get(['lastVoteDate', 'nickname', 'voteLink', 'email'], (data) => {
-
         const today = new Date().toISOString().split('T')[0];
 
         if (data.lastVoteDate === today) {
@@ -41,14 +44,17 @@ function checkAndVote() {
         }
 
         if (data.voteLink) {
-            chrome.storage.local.set({ isVoteInProcess: true });
-            chrome.tabs.create({
-                url: data.voteLink
+            chrome.storage.local.set({
+                isVoteInProcess: true,
+                isWaitForVoteSuccess: false,
+                isWaitForCloseTab: false,
+                isSignComplete: false
+            }, () => {
+                chrome.tabs.create({ url: data.voteLink });
             });
-
-
         }
-    })
+    });
 }
+
 
 init()
