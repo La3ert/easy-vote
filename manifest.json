@@ -9,7 +9,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://minecraft-servers.ru/server/*",
+      "matches": ["https://minecraft-servers.ru/*",
         "https://accounts.google.com/*"],
 
       "js": ["js/content.js"]
