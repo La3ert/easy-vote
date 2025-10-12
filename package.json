@@ -9,5 +9,8 @@
   "private": true,
   "devDependencies": {
     "@types/chrome": "^0.1.12"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1"
   }
 }

@@ -4,9 +4,6 @@
   "description": "Расширение для автоматического голосования за Minecraft-сервер на сайте minecraft-servers.ru.",
   "version": "1.0",
   "author": "La3ert",
-  "action": {
-    "default_popup": "html/popup.html"
-  },
   "content_scripts": [
     {
       "matches": ["https://minecraft-servers.ru/*",

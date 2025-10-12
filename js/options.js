@@ -57,21 +57,35 @@ document.getElementById("clearData").addEventListener("click", (e) => {
     });
 });
 
+// js/options.js (заменить существующую функцию showCurrentData)
 function showCurrentData() {
     chrome.storage.sync.get(['nickname', 'voteLink', 'email', 'lastVoteDate'], (data) => {
         const display = document.getElementById('currentData');
-        display.textContent = `
-            Nickname: ${data.nickname || 'not set'}
-            Vote link: ${data.voteLink || 'not set'}
-            Email: ${data.email || 'not set'}
-            Last Vote Date: ${data.lastVoteDate || 'never voted'}
-            `;
+        display.innerHTML = ''; // очистить контейнер
 
-        document.getElementById('clearData').disabled = false;
         if (!data.nickname && !data.voteLink && !data.email) {
             display.textContent = 'No data set.';
             document.getElementById('clearData').disabled = true;
+            return;
         }
+
+        const lines = [
+            `Nickname: ${data.nickname || 'not set'}`,
+            `Vote link: ${data.voteLink || 'not set'}`,
+            `Email: ${data.email || 'not set'}`,
+            `Last Vote Date: ${data.lastVoteDate || 'never voted'}`
+        ];
+
+        // Разбиваем каждую строку на подстроки, если внутри есть переводы строки
+        const finalLines = lines.flatMap(line => line.split(/\r?\n/));
+
+        finalLines.forEach(line => {
+            const row = document.createElement('div');
+            row.textContent = line; // безопасно, без HTML-инъекций
+            display.appendChild(row);
+        });
+
+        document.getElementById('clearData').disabled = false;
     });
 }
 

@@ -4,36 +4,47 @@
     <meta charset="UTF-8">
     <title>Easy Vote Settings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/options.css">
 </head>
+
+
 <body>
 <main class="settings-container">
+
     <h1 class="settings-title">Vote settings</h1>
 
-    <form id="settingsForm" class="settings-form">
-        <div class="form-group">
-            <label for="nickname" class="form-label">Nickname:</label>
-            <input type="text" id="nickname" class="form-input" required>
+    <div class="data-section">
+        <form id="settingsForm" class="settings-form">
+
+            <h2 class="form-title">Main setting</h2>
+
+            <div class="form-group">
+                <label for="nickname" class="form-label">Nickname:</label>
+                <input type="text" id="nickname" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="voteLink" class="form-label">Vote link:</label>
+                <input type="url" id="voteLink" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" class="form-input" required>
+            </div>
+
+            <button type="submit" class="btn">Save vote data</button>
+            <p id="status" class="form-status" aria-live="polite"></p>
+
+        </form>
+
+        <div class="current-data-section" id="currentDataSection">
+            <h2 class="current-data-title">Current saved data:</h2>
+            <div id="currentData" class="current-data"></div>
+            <button id="clearData" class="btn btn-clear">Clear data</button>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="voteLink" class="form-label">Vote link:</label>
-            <input type="url" id="voteLink" class="form-input" required>
-        </div>
-
-        <div class="form-group">
-            <label for="email" class="form-label">Email:</label>
-            <input type="email" id="email" class="form-input" required>
-        </div>
-
-        <button type="submit" class="btn-save">Save</button>
-        <p id="status" class="form-status" aria-live="polite"></p>
-    </form>
-
-    <section class="current-data-section" id="currentDataSection">
-        <h2 class="current-data-title">Current saved data:</h2>
-        <div id="currentData" class="current-data"></div>
-        <button id="clearData" class="btn-clear">Clear data</button>
-    </section>
 </main>
 
 <script src="../js/options.js"></script>
