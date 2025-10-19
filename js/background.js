@@ -40,16 +40,18 @@ function checkAndVote() {
             return;
         }
 
-        if (data.voteLink) {
-            chrome.storage.local.set({
-                isVoteInProcess: true,
-                isWaitForVoteSuccess: false,
-                isWaitForCloseTab: false,
-                isSignComplete: false
-            }, () => {
-                chrome.tabs.create({ url: data.voteLink });
-            });
-        }
+        chrome.storage.local.get(['isVoteInProcess'], (result) => {
+            if (data.voteLink && !result.isVoteInProcess) {
+                chrome.storage.local.set({
+                    isVoteInProcess: true,
+                    isWaitForVoteSuccess: false,
+                    isWaitForCloseTab: false,
+                    isSignComplete: false
+                }, () => {
+                    chrome.tabs.create({url: data.voteLink});
+                });
+            }
+        })
     });
 }
 
