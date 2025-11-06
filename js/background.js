@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 
-function init () {
+function  init () {
     chrome.storage.sync.get(['nickname', 'voteLink', 'email'], (data) => {
         if (data.voteLink) checkAndVote();
     });
@@ -55,5 +55,5 @@ function checkAndVote() {
     });
 }
 
-
-init()
+chrome.runtime.onInstalled.addListener(init)
+chrome.runtime.onStartup.addListener(init)

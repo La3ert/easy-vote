@@ -1,0 +1,36 @@
+:root {
+
+    /*Body colors*/
+    --color-bg: #09150a;
+    --color-primary: #0d2010;
+
+    /*Button colors*/
+    --color-btn-primary: #203923;
+    --color-btn-primary-hover: #294a2d;
+    --color-btn-secondary: #7c2a25;
+    --color-btn-secondary-hover: #91302a;
+
+
+    /*Text colors*/
+    --color-text-primary: #f0eedf;
+
+    /*Input gap colors*/
+    --color-input-gap: #e3ddc3;
+
+    /*Font families*/
+    --font-family-primary: "Manrope", sans-serif;
+
+    /*Fonts*/
+    --font-size-xl: 40px;
+    --font-size-l: 30px;
+    --font-size-m: 18px;
+    --font-size-s: 16px;
+
+    --font-size-h1: var(--font-size-xl);
+    --font-size-h2: var(--font-size-l);
+    --font-size-h3: var(--font-size-m);
+    --font-size-h4: var(--font-size-s);
+
+    /*Border radius*/
+    --border-radius-primary: 16px;
+}

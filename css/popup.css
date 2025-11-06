@@ -4,6 +4,8 @@
 }
 
 @layer base {
+
+
     *,
     *::before,
     *::after {
@@ -15,12 +17,15 @@
     h1 {
         font-size: var(--font-size-h1);
     }
+
     h2 {
         font-size: var(--font-size-h2);
     }
+
     h3 {
         font-size: var(--font-size-h3);
     }
+
     h4 {
         font-size: var(--font-size-h4);
     }
@@ -30,7 +35,8 @@
     }
 
     body {
-        min-height: 100vh; /* заполняет весь экран */
+        width: 400px;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -38,95 +44,17 @@
         color: var(--color-text-primary);
     }
 
-    .settings-title {
-        display: block;
-        width: 100%;
-        max-width: 450px;
-        box-sizing: border-box;
-        color: var(--color-text-primary);
-        background-color: var(--color-primary);
-        padding: 10px 20px;
-        border-radius: var(--border-radius-primary);
-    }
-
-
-    .data-section {
-        display: flex;
-        flex-direction: column;
-        background-color: var(--color-primary) ;
-        border-radius: var(--border-radius-primary);
-        width: 100%;
-        max-width: 450px;
-        box-sizing: border-box;
-    }
-
-    .settings-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        padding: 20px;
-        max-width: 600px;
-        width: 100%;
-    }
-
-    .settings-title {
-        font-size: var(--font-size-h1);
+    .popup-title {
         display: flex;
         align-items: center;
         justify-content: center;
     }
-
-    .form-title {
-        margin-top: 10px;
-    }
-
-    .settings-form {
+    .buttons-container {
         display: flex;
         flex-direction: column;
-        align-items: center;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
-    }
-
-    .form-label {
-        font-size: var(--font-size-s);
-    }
-
-    .form-input {
-        background-color: var(--color-input-gap);
-        border: none;
-        border-radius: 5px;
-        padding: 10px;
-        font-size: 14px;
-        width: 300px;
-    }
-
-    .current-data-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        padding: 20px;
-        width: 100%;
-    }
-
-    .current-data {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        font-size: var(--font-size-s);
-        background-color: var(--color-primary);
-        border-radius: var(--border-radius-primary);
-        padding: 20px;
-        width: 100%;
+        gap: 10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 }
 
@@ -168,5 +96,4 @@
             --btn-hover-bg-color: var(--color-btn-secondary-hover);
         }
     }
-
 }
