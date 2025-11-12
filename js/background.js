@@ -35,24 +35,29 @@ function resetVoteState() {
     }
 }
 
+chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === 'voteCheck') {
+        checkAndVote();
+        console.log("Vote check");
+    }
+});
+
 function init() {
     chrome.storage.sync.get(['nickname', 'voteLink', 'email'], (data) => {
         if (data.voteLink) checkAndVote();
     });
 
     chrome.alarms.create('voteCheck', { periodInMinutes: 10 });
-
-    chrome.alarms.onAlarm.addListener((alarm) => {
-        if (alarm.name === 'voteCheck') {
-            checkAndVote();
-        }
-    });
 }
 
 async function checkAndVote() {
 
+    console.log("checkAndVote started");
 
-    if (voteLock) return;
+    if (voteLock) {
+        console.log("voteLock lock");
+        return;
+    }
     voteLock = true;
 
     const data = await chrome.storage.sync.get(['lastVoteDate', 'nickname', 'voteLink', 'email']);
@@ -73,7 +78,7 @@ async function checkAndVote() {
 
         voteTimeout = setTimeout(() => {
             resetVoteState();
-        }, 10 * 60 * 1000); // 10 минут
+        }, 10 * 60 * 1000);
         chrome.tabs.create({ url: data.voteLink });
     } else {
         voteLock = false;
