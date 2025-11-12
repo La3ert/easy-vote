@@ -12,8 +12,20 @@
       "js": ["js/content.js"]
     }
   ],
+  "icons": {
+    "16": "resources/icons/Logo16.png",
+    "32": "resources/icons/Logo32.png",
+    "48": "resources/icons/Logo64.png",
+    "128": "resources/icons/Logo128.png"
+  },
   "action": {
-    "default_popup": "html/popup.html"
+    "default_popup": "html/popup.html",
+    "default_icon": {
+      "16": "resources/icons/Logo16.png",
+      "32": "resources/icons/Logo32.png",
+      "48": "resources/icons/Logo64.png",
+      "128": "resources/icons/Logo128.png"
+    }
   },
   "permissions": [
     "storage",
