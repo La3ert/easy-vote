@@ -28,7 +28,7 @@ window.addEventListener('load', () => {
             return;
         }
 
-        if (location.href.includes("oauthchooseaccount")) {
+        if (location.href.includes("accountchooser")) {
             setTimeout(waitForGoogleEmail, 1000);
         }
     });
